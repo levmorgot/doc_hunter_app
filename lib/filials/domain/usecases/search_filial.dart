@@ -6,7 +6,7 @@ import 'package:doc_hunter_app/filials/domain/repositories/filial_repository.dar
 import 'package:doc_hunter_app/filials/domain/usecases/params/search_filial_params.dart';
 
 class SearchFilial extends UseCase<List<FilialEntity>, SearchFilialParams> {
-  final FilialRepository filialRepository;
+  final IFilialRepository filialRepository;
 
   SearchFilial(this.filialRepository);
 
