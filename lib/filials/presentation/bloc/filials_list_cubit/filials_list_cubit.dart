@@ -9,7 +9,8 @@ class FilialsListCubit extends Cubit<FilialState> {
   final GetAllFilials getAllFilials;
   final int limit;
 
-  FilialsListCubit({required this.getAllFilials, required this.limit}) : super(FilialEmptyState());
+  FilialsListCubit({required this.getAllFilials, required this.limit})
+      : super(FilialEmptyState());
   int skip = 0;
 
   void loadFilials() async {
@@ -21,12 +22,16 @@ class FilialsListCubit extends Cubit<FilialState> {
     if (currentState is FilialLoadedState) {
       oldFilials = currentState.filialsList;
     }
-    
+
     emit(FilialLoadingState(oldFilials, isFirstFetch: skip == 0));
 
-    final failureOrFilials = await getAllFilials(PageFilialParams(skip: skip, limit: limit));
+    final failureOrFilials =
+        await getAllFilials(PageFilialParams(skip: skip, limit: limit));
 
-    failureOrFilials.fold((failure) => FilialErrorState(message: _mapFailureMessage(failure)), (filial) {
+    failureOrFilials.fold(
+        (failure) =>
+            emit(FilialErrorState(message: _mapFailureMessage(failure))),
+        (filial) {
       skip += limit;
       final filials = (state as FilialLoadingState).oldFilialsList;
       filials.addAll(filial);
@@ -44,5 +49,4 @@ class FilialsListCubit extends Cubit<FilialState> {
         return 'Unexpected Error';
     }
   }
-
 }

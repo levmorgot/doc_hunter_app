@@ -30,9 +30,14 @@ class FilialLocalDataSource implements IFilialLocalDataSource {
   Future<List<FilialModel>> getLastFilialsFromCache() {
     final jsonFilialList = sharedPreferences.getStringList(cacheFilialsList);
     if (jsonFilialList != null && jsonFilialList.isNotEmpty) {
-      return Future.value(jsonFilialList
-          .map((filial) => FilialModel.fromJson(json.decode(filial)))
-          .toList());
+      try {
+        return Future.value(jsonFilialList
+            .map((filial) => FilialModel.fromJson(json.decode(filial)))
+            .toList());
+      } catch(e) {
+        throw CacheException();
+      }
+
     } else {
       throw CacheException();
     }

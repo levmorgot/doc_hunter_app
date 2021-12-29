@@ -1,10 +1,11 @@
+import 'package:doc_hunter_app/common/app_colors.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_cubit.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/locator_service.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'filials/presentation/pages/filials_list.dart';
+import 'filials/presentation/pages/filials_screen.dart';
 import 'locator_service.dart';
 
 void main() async {
@@ -21,14 +22,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<FilialsListCubit>(
-              create: (context) => sl<FilialsListCubit>()),
+              create: (context) => sl<FilialsListCubit>()..loadFilials()),
           BlocProvider<FilialSearchBloc>(
               create: (context) => sl<FilialSearchBloc>()),
         ],
         child: MaterialApp(
           theme: ThemeData.dark().copyWith(
-            backgroundColor: Colors.black,
-            scaffoldBackgroundColor: Colors.grey,
+            backgroundColor: AppColors.mainBackground,
+            scaffoldBackgroundColor: AppColors.mainBackground,
           ),
           home: const HomePage(),
         ));

@@ -9,9 +9,9 @@ import 'package:doc_hunter_app/filials/domain/entities/filial_entity.dart';
 import 'package:doc_hunter_app/filials/domain/repositories/filial_repository.dart';
 
 class FilialRepository implements IFilialRepository {
-  final FilialRemoteDataSource remoteDataSource;
-  final FilialLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
+  final IFilialRemoteDataSource remoteDataSource;
+  final IFilialLocalDataSource localDataSource;
+  final INetworkInfo networkInfo;
 
   FilialRepository(
       {required this.remoteDataSource,

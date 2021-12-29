@@ -25,7 +25,7 @@ class FilialRemoteDataSource implements IFilialRemoteDataSource {
   Future<List<FilialModel>> searchFilial(
       String query, int limit, int skip) async {
     return await _getFilialsFromUrl(
-        'http://89.108.83.99:8000/filials/search/$query/?limit=$limit&skip=$skip');
+        'http://89.108.83.99:8000/filials/?search_string=$query&limit=$limit&skip=$skip');
   }
 
   Future<List<FilialModel>> _getFilialsFromUrl(String url) async {
@@ -33,7 +33,7 @@ class FilialRemoteDataSource implements IFilialRemoteDataSource {
     final response = await client
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
-      final filials = json.decode(response.body);
+      final filials = json.decode(utf8.decode(response.bodyBytes));
       return (filials as List)
           .map((filial) => FilialModel.fromJson(filial))
           .toList();
