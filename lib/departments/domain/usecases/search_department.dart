@@ -3,16 +3,16 @@ import 'package:doc_hunter_app/core/error/failure.dart';
 import 'package:doc_hunter_app/core/usecases/usecase.dart';
 import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 import 'package:doc_hunter_app/departments/domain/repositories/department_repository.dart';
-import 'package:doc_hunter_app/filials/domain/usecases/params/search_filial_params.dart';
+import 'package:doc_hunter_app/departments/domain/usecases/params/search_department_params.dart';
 
-class SearchDepartment extends UseCase<List<DepartmentEntity>, SearchFilialParams> {
+class SearchDepartment extends UseCase<List<DepartmentEntity>, SearchDepartmentParams> {
   final IDepartmentRepository departmentRepository;
 
   SearchDepartment(this.departmentRepository);
 
   @override
   Future<Either<Failure, List<DepartmentEntity>>> call(
-      SearchFilialParams params) async {
+      SearchDepartmentParams params) async {
     return await departmentRepository.searchDepartment(
         params.query, params.pageParams.limit, params.pageParams.skip);
   }
