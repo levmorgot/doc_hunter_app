@@ -12,13 +12,13 @@ class FilialSearchBloc extends Bloc<FilialSearchEvent, FilialSearchState> {
       : super(FilialSearchEmptyState()) {
     on<SearchFilialsEvent>((event, emit) async {
       emit(FilialSearchLoadingState());
-      final failureOrFilials = await searchFilial(SearchFilialParams(pageParams: event.pageFilialParams, query: event.filialQuery));
+      final failureOrFilials = await searchFilial(SearchFilialParams(
+          pageParams: event.pageFilialParams, query: event.filialQuery));
 
-      failureOrFilials.fold((failure) {
-        emit(FilialSearchErrorState(message: _mapFailureMessage(failure)));
-      }, (filials) {
-        emit(FilialSearchLoadedState(filials: filials));
-      });
+      emit(failureOrFilials.fold(
+            (failure) =>
+            FilialSearchErrorState(message: _mapFailureMessage(failure)),
+            (filials) => FilialSearchLoadedState(filials: filials)));
     });
   }
 

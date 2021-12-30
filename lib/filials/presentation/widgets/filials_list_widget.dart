@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FilialsList extends StatelessWidget {
-
   final scrollController = ScrollController();
 
   FilialsList({Key? key}) : super(key: key);
@@ -30,39 +29,39 @@ class FilialsList extends StatelessWidget {
 
     return BlocBuilder<FilialsListCubit, FilialState>(
         builder: (context, state) {
-          List<FilialEntity> filials = [];
-          if (state is FilialLoadingState && state.isFirstFetch) {
+      List<FilialEntity> filials = [];
+      if (state is FilialLoadingState && state.isFirstFetch) {
+        return _loadingIndicator();
+      } else if (state is FilialLoadingState) {
+        filials = state.oldFilialsList;
+        isLoading = true;
+      } else if (state is FilialErrorState) {
+        return Text(state.message);
+      } else if (state is FilialLoadedState) {
+        filials = state.filialsList;
+      }
+      return ListView.separated(
+        padding: const EdgeInsets.all(8.0),
+        controller: scrollController,
+        itemBuilder: (context, index) {
+          if (index < filials.length) {
+            return FilialCard(filial: filials[index]);
+          } else {
+            Timer(const Duration(milliseconds: 30), () {
+              scrollController
+                  .jumpTo(scrollController.position.maxScrollExtent);
+            });
             return _loadingIndicator();
-          } else if (state is FilialLoadingState) {
-            filials = state.oldFilialsList;
-            isLoading = true;
-          } else if (state is FilialErrorState) {
-            return Text(state.message);
-          } else if (state is FilialLoadedState) {
-            filials = state.filialsList;
           }
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.separated(
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                if (index < filials.length) {
-                  return FilialCard(filial: filials[index]);
-                } else {
-                  Timer(const Duration(milliseconds: 30), () {
-                    scrollController.jumpTo(scrollController.position.maxScrollExtent);
-                  });
-                  return _loadingIndicator();
-                }
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                  color: Colors.grey[400],
-                );
-              },
-              itemCount: filials.length + (isLoading ? 1 : 0)),
+        },
+        separatorBuilder: (context, index) {
+          return Divider(
+            color: Colors.grey[400],
           );
-        });
+        },
+        itemCount: filials.length + (isLoading ? 1 : 0),
+      );
+    });
   }
 
   Widget _loadingIndicator() {

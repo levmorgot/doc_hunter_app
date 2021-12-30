@@ -22,8 +22,7 @@ class FilialLocalDataSource implements IFilialLocalDataSource {
     final List<String> jsonFilialList =
         filials.map((filial) => json.encode(filial.toJson())).toList();
     sharedPreferences.setStringList(cacheFilialsList, jsonFilialList);
-    print('$cacheFilialsList ${jsonFilialList.length}');
-    return Future.value(jsonFilialList);
+    return Future.value();
   }
 
   @override
