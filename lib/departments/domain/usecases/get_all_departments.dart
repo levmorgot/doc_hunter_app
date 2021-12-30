@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:doc_hunter_app/core/error/failure.dart';
 import 'package:doc_hunter_app/core/usecases/usecase.dart';
-import 'package:doc_hunter_app/departments/domain/entities/depatment_entity.dart';
+import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 import 'package:doc_hunter_app/departments/domain/repositories/department_repository.dart';
 import 'package:doc_hunter_app/departments/domain/usecases/params/page_department_params.dart';
 
