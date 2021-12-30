@@ -13,7 +13,7 @@ class SearchDepartment extends UseCase<List<DepartmentEntity>, SearchFilialParam
   @override
   Future<Either<Failure, List<DepartmentEntity>>> call(
       SearchFilialParams params) async {
-    return await departmentRepository.searchFilial(
+    return await departmentRepository.searchDepartment(
         params.query, params.pageParams.limit, params.pageParams.skip);
   }
 }

@@ -3,9 +3,9 @@ import 'package:doc_hunter_app/core/error/failure.dart';
 import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 
 abstract class IDepartmentRepository {
-  Future<Either<Failure, List<DepartmentEntity>>> getAllFilials(
+  Future<Either<Failure, List<DepartmentEntity>>> getAllDepartments(
       int limit, int skip);
 
-  Future<Either<Failure, List<DepartmentEntity>>> searchFilial(
+  Future<Either<Failure, List<DepartmentEntity>>> searchDepartment(
       String query, int limit, int skip);
 }
