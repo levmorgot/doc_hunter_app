@@ -14,17 +14,21 @@ class DepartmentsListCubit extends Cubit<DepartmentState> {
     required this.limit,
   }) : super(DepartmentEmptyState());
 
-  void loadDepartments(int filialId, int filialCacheId, int skip) async {
+  void loadDepartments(int filialId, int filialCacheId) async {
     if (state is DepartmentLoadingState) return;
 
     final currentState = state;
 
     var oldDepartments = <DepartmentEntity>[];
     if (currentState is DepartmentLoadedState) {
-      oldDepartments = currentState.departmentsList["$filialId-$filialCacheId"] ?? [];
+      oldDepartments =
+          currentState.departmentsList["$filialId-$filialCacheId"] ?? [];
     }
 
-    emit(DepartmentLoadingState({"$filialId-$filialCacheId": oldDepartments}, isFirstFetch: skip == 0));
+    final int skip = oldDepartments.length;
+
+    emit(DepartmentLoadingState({"$filialId-$filialCacheId": oldDepartments},
+        isFirstFetch: skip == 0));
 
     final failureOrDepartments = await getAllDepartments(PageDepartmentParams(
         skip: skip,
@@ -39,7 +43,7 @@ class DepartmentsListCubit extends Cubit<DepartmentState> {
       final departments = (state as DepartmentLoadingState).oldDepartments["$filialId-$filialCacheId"] ?? [];
       departments.addAll(department.where((element) => !departments.contains(element)));
 
-      emit(departments.isNotEmpty ? DepartmentLoadedState({"$filialId-$filialCacheId": departments}) : DepartmentEmptyState());
+      emit(departments.isNotEmpty ? DepartmentLoadedState({"$filialId-$filialCacheId": departments}, department.isEmpty) : DepartmentEmptyState());
     });
   }
 

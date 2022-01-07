@@ -12,13 +12,17 @@ class DepartmentsList extends StatelessWidget {
   final int filialId;
   final int filialCacheId;
 
-  DepartmentsList({Key? key, required this.filialId, required this.filialCacheId}) : super(key: key);
+  DepartmentsList(
+      {Key? key, required this.filialId, required this.filialCacheId})
+      : super(key: key);
 
-  void setupScrollController(BuildContext context,  int departmentsLength) {
+  void setupScrollController(BuildContext context) {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          context.read<DepartmentsListCubit>().loadDepartments(filialId, filialCacheId, departmentsLength);
+          context
+              .read<DepartmentsListCubit>()
+              .loadDepartments(filialId, filialCacheId);
         }
       }
     });
@@ -26,13 +30,15 @@ class DepartmentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DepartmentEntity> departments = [];
-
-    setupScrollController(context, departments.length);
+    setupScrollController(context);
     bool isLoading = false;
-    context.read<DepartmentsListCubit>().loadDepartments(filialId, filialCacheId, departments.length);
+    context
+        .read<DepartmentsListCubit>()
+        .loadDepartments(filialId, filialCacheId);
     return BlocBuilder<DepartmentsListCubit, DepartmentState>(
         builder: (context, state) {
+      List<DepartmentEntity> departments = [];
+      bool thatAll = false;
 
       if (state is DepartmentLoadingState && state.isFirstFetch) {
         return _loadingIndicator();
@@ -43,9 +49,9 @@ class DepartmentsList extends StatelessWidget {
         return Text(state.message);
       } else if (state is DepartmentEmptyState) {
         return const Text("Нет отделений");
-      }
-      else if (state is DepartmentLoadedState) {
+      } else if (state is DepartmentLoadedState) {
         departments = state.departmentsList["$filialId-$filialCacheId"] ?? [];
+        thatAll = state.thatAll;
       }
       return ListView.separated(
         padding: const EdgeInsets.all(8.0),
@@ -66,7 +72,7 @@ class DepartmentsList extends StatelessWidget {
             color: Colors.grey[400],
           );
         },
-        itemCount: departments.length + (isLoading ? 1 : 0),
+        itemCount: departments.length + (isLoading && !thatAll ? 1 : 0),
       );
     });
   }

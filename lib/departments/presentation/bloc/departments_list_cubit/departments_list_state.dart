@@ -26,12 +26,14 @@ class DepartmentLoadingState extends DepartmentState {
 
 class DepartmentLoadedState extends DepartmentState {
   final Map<String, List<DepartmentEntity>> departmentsList;
+  final bool thatAll;
 
-  const DepartmentLoadedState(this.departmentsList);
+  const DepartmentLoadedState(this.departmentsList, this.thatAll);
 
   @override
   List<Object> get props => [departmentsList];
 }
+
 
 class DepartmentErrorState extends DepartmentState {
   final String message;
