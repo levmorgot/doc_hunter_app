@@ -20,17 +20,17 @@ class DoctorRepository implements IDoctorRepository {
 
   @override
   Future<Either<Failure, List<DoctorEntity>>> getAllDoctors(
-      int filialId, int filialCacheId, int limit, int skip) async {
+      int filialId, int filialCacheId, int departmentId, int limit, int skip) async {
     return _getDoctors(() {
-      return remoteDataSource.getAllDoctors(filialId, filialCacheId, limit, skip);
+      return remoteDataSource.getAllDoctors(filialId, filialCacheId, departmentId, limit, skip);
     });
   }
 
   @override
   Future<Either<Failure, List<DoctorEntity>>> searchDoctor(int filialId,
-      int filialCacheId, String query, int limit, int skip) async {
+      int filialCacheId, int departmentId, String query, int limit, int skip) async {
     return _getDoctors(() {
-      return remoteDataSource.searchDoctor(filialId, filialCacheId, query, limit, skip);
+      return remoteDataSource.searchDoctor(filialId, filialCacheId, departmentId, query, limit, skip);
     });
   }
 

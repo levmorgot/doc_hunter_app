@@ -17,6 +17,7 @@ class SearchDoctor
     return await doctorRepository.searchDoctor(
         params.pageParams.filiaId,
         params.pageParams.filialCacheId,
+        params.pageParams.departmentId,
         params.query,
         params.pageParams.limit,
         params.pageParams.skip);

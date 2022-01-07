@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DoctorSearchDelegate extends SearchDelegate {
   final int filialId;
   final int filialCacheId;
+  final int departmentId;
   final _suggestions = [
     'Мира',
     'Детская ',
@@ -18,7 +19,7 @@ class DoctorSearchDelegate extends SearchDelegate {
   ];
 
   DoctorSearchDelegate(
-      {required this.filialId, required this.filialCacheId})
+      {required this.filialId, required this.filialCacheId, required this.departmentId})
       : super(searchFieldLabel: 'Поиск по больницам');
 
   @override
@@ -50,7 +51,7 @@ class DoctorSearchDelegate extends SearchDelegate {
                 limit: 15,
                 skip: 0,
                 filialCacheId: filialCacheId,
-                filiaId: filialId)));
+                filiaId: filialId, departmentId: departmentId)));
     return BlocBuilder<DoctorSearchBloc, DoctorSearchState>(
         builder: (context, state) {
       if (state is DoctorSearchLoadingState) {

@@ -6,7 +6,7 @@ class DoctorModel extends DoctorEntity {
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
-      id: json['id'],
+      id: json['id'] ?? json['dcode'],
       name: json['name'],
     );
   }

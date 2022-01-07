@@ -13,6 +13,6 @@ class GetAllDoctors extends UseCase<List<DoctorEntity>, PageDoctorParams> {
   @override
   Future<Either<Failure, List<DoctorEntity>>> call(
       PageDoctorParams params) async {
-    return await doctorRepository.getAllDoctors(params.filiaId, params.filialCacheId, params.limit, params.skip);
+    return await doctorRepository.getAllDoctors(params.filiaId, params.filialCacheId, params.departmentId,  params.limit, params.skip);
   }
 }

@@ -11,9 +11,10 @@ class DoctorsList extends StatelessWidget {
   final scrollController = ScrollController();
   final int filialId;
   final int filialCacheId;
+  final int departmentId;
 
   DoctorsList(
-      {Key? key, required this.filialId, required this.filialCacheId})
+      {Key? key, required this.filialId, required this.filialCacheId, required this.departmentId})
       : super(key: key);
 
   void setupScrollController(BuildContext context) {
@@ -22,7 +23,7 @@ class DoctorsList extends StatelessWidget {
         if (scrollController.position.pixels != 0) {
           context
               .read<DoctorsListCubit>()
-              .loadDoctors(filialId, filialCacheId);
+              .loadDoctors(filialId, filialCacheId, departmentId);
         }
       }
     });
@@ -34,7 +35,7 @@ class DoctorsList extends StatelessWidget {
     bool isLoading = false;
     context
         .read<DoctorsListCubit>()
-        .loadDoctors(filialId, filialCacheId);
+        .loadDoctors(filialId, filialCacheId, departmentId);
     return BlocBuilder<DoctorsListCubit, DoctorState>(
         builder: (context, state) {
       List<DoctorEntity> doctors = [];
@@ -43,14 +44,14 @@ class DoctorsList extends StatelessWidget {
       if (state is DoctorLoadingState && state.isFirstFetch) {
         return _loadingIndicator();
       } else if (state is DoctorLoadingState) {
-        doctors = state.oldDoctors["$filialId-$filialCacheId"] ?? [];
+        doctors = state.oldDoctors["$filialId-$filialCacheId-$departmentId"] ?? [];
         isLoading = true;
       } else if (state is DoctorErrorState) {
         return Text(state.message);
       } else if (state is DoctorEmptyState) {
         return const Text("Нет отделений");
       } else if (state is DoctorLoadedState) {
-        doctors = state.doctorsList["$filialId-$filialCacheId"] ?? [];
+        doctors = state.doctorsList["$filialId-$filialCacheId-$departmentId"] ?? [];
         thatAll = state.thatAll;
       }
       return ListView.separated(

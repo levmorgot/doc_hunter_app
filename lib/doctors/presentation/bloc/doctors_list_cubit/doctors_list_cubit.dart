@@ -14,37 +14,44 @@ class DoctorsListCubit extends Cubit<DoctorState> {
     required this.limit,
   }) : super(DoctorEmptyState());
 
-  void loadDoctors(int filialId, int filialCacheId) async {
+  void loadDoctors(int filialId, int filialCacheId, int departmentId) async {
     if (state is DoctorLoadingState) return;
 
     final currentState = state;
 
     var oldDoctors = <DoctorEntity>[];
     if (currentState is DoctorLoadedState) {
-      oldDoctors =
-          currentState.doctorsList["$filialId-$filialCacheId"] ?? [];
+      oldDoctors = currentState.doctorsList["$filialId-$filialCacheId-$departmentId"] ?? [];
     }
 
     final int skip = oldDoctors.length;
 
-    emit(DoctorLoadingState({"$filialId-$filialCacheId": oldDoctors},
+    emit(DoctorLoadingState({"$filialId-$filialCacheId-$departmentId": oldDoctors},
         isFirstFetch: skip == 0));
 
     final failureOrDoctors = await getAllDoctors(PageDoctorParams(
         skip: skip,
         limit: limit,
         filiaId: filialId,
-        filialCacheId: filialCacheId));
+        filialCacheId: filialCacheId,
+        departmentId: departmentId));
 
     failureOrDoctors.fold(
         (failure) =>
             emit(DoctorErrorState(message: _mapFailureMessage(failure))),
         (doctor) {
-      final doctors = (state as DoctorLoadingState).oldDoctors["$filialId-$filialCacheId"] ?? [];
+      final doctors = (state as DoctorLoadingState)
+              .oldDoctors["$filialId-$filialCacheId-$departmentId"] ??
+          [];
+
       doctors.addAll(doctor.where((element) => !doctors.contains(element)));
 
-      emit(doctors.isNotEmpty ? DoctorLoadedState({"$filialId-$filialCacheId": doctors}, doctor.isEmpty) : DoctorEmptyState());
+      emit(doctors.isNotEmpty
+          ? DoctorLoadedState(
+              {"$filialId-$filialCacheId-$departmentId": doctors}, doctor.isEmpty)
+          : DoctorEmptyState());
     });
+
   }
 
   String _mapFailureMessage(Failure failure) {

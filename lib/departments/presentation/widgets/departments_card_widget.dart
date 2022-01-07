@@ -1,7 +1,6 @@
 import 'package:doc_hunter_app/common/app_colors.dart';
 import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 import 'package:doc_hunter_app/doctors/presentation/pages/doctors_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DepartmentCard extends StatelessWidget {
@@ -15,7 +14,7 @@ class DepartmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DoctorsPage(filialCacheId: filialCacheId, filialId: filialId,)));
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DoctorsPage(filialCacheId: filialCacheId, filialId: filialId, departmentId: department.id,)));
       },
       child: Container(
         decoration: BoxDecoration(
