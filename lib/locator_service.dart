@@ -1,4 +1,12 @@
 import 'package:doc_hunter_app/core/platform/network_info.dart';
+import 'package:doc_hunter_app/departments/data/datasources/department_local_data_sources.dart';
+import 'package:doc_hunter_app/departments/data/datasources/department_remote_data_sources.dart';
+import 'package:doc_hunter_app/departments/data/repositories/department_repository.dart';
+import 'package:doc_hunter_app/departments/domain/repositories/department_repository.dart';
+import 'package:doc_hunter_app/departments/domain/usecases/get_all_departments.dart';
+import 'package:doc_hunter_app/departments/domain/usecases/search_department.dart';
+import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_cubit.dart';
+import 'package:doc_hunter_app/departments/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/filials/data/datasources/filial_local_data_sources.dart';
 import 'package:doc_hunter_app/filials/data/datasources/filial_remote_data_sources.dart';
 import 'package:doc_hunter_app/filials/data/repositories/filial_repository.dart';
@@ -25,9 +33,19 @@ Future<void> init() async {
     () => FilialSearchBloc(searchFilial: sl()),
   );
 
+  sl.registerFactory(
+        () => DepartmentsListCubit(getAllDepartments: sl(), limit: 15),
+  );
+  sl.registerFactory(
+        () => DepartmentSearchBloc(searchDepartment: sl()),
+  );
+
   // UseCases
   sl.registerLazySingleton(() => GetAllFilials(sl()));
   sl.registerLazySingleton(() => SearchFilial(sl()));
+
+  sl.registerLazySingleton(() => GetAllDepartments(sl()));
+  sl.registerLazySingleton(() => SearchDepartment(sl()));
 
   // Repository
   sl.registerLazySingleton<IFilialRepository>(
@@ -46,6 +64,26 @@ Future<void> init() async {
 
   sl.registerLazySingleton<IFilialLocalDataSource>(
     () => FilialLocalDataSource(sharedPreferences: sl()),
+  );
+
+
+  //departments
+  sl.registerLazySingleton<IDepartmentRepository>(
+        () => DepartmentRepository(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<IDepartmentRemoteDataSource>(
+        () => DepartmentRemoteDataSource(
+      client: http.Client(),
+    ),
+  );
+
+  sl.registerLazySingleton<IDepartmentLocalDataSource>(
+        () => DepartmentLocalDataSource(sharedPreferences: sl()),
   );
 
   // Core

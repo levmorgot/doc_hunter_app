@@ -9,33 +9,40 @@ class DepartmentsListCubit extends Cubit<DepartmentState> {
   final GetAllDepartments getAllDepartments;
   final int limit;
 
-  DepartmentsListCubit({required this.getAllDepartments, required this.limit})
-      : super(DepartmentEmptyState());
-  int skip = 0;
+  DepartmentsListCubit({
+    required this.getAllDepartments,
+    required this.limit,
+  }) : super(DepartmentEmptyState());
 
-  void loadDepartments() async {
+  void loadDepartments(int filialId, int filialCacheId, int skip) async {
     if (state is DepartmentLoadingState) return;
 
     final currentState = state;
 
     var oldDepartments = <DepartmentEntity>[];
     if (currentState is DepartmentLoadedState) {
-      oldDepartments = currentState.departmentsList;
+      oldDepartments = currentState.departmentsList["$filialId-$filialCacheId"] ?? [];
     }
 
-    emit(DepartmentLoadingState(oldDepartments, isFirstFetch: skip == 0));
+    emit(DepartmentLoadingState({"$filialId-$filialCacheId": oldDepartments}, isFirstFetch: skip == 0));
 
-    final failureOrDepartments =
-        await getAllDepartments(PageDepartmentParams(skip: skip, limit: limit));
+    final failureOrDepartments = await getAllDepartments(PageDepartmentParams(
+        skip: skip,
+        limit: limit,
+        filiaId: filialId,
+        filialCacheId: filialCacheId));
 
     failureOrDepartments.fold(
         (failure) =>
             emit(DepartmentErrorState(message: _mapFailureMessage(failure))),
         (department) {
-      skip += limit;
-      final departments = (state as DepartmentLoadingState).oldDepartmentsList;
-      departments.addAll(department);
-      emit(DepartmentLoadedState(departments));
+      final departments = (state as DepartmentLoadingState).oldDepartments["$filialId-$filialCacheId"] ?? [];
+      print((state as DepartmentLoadingState).oldDepartments);
+      print(["$filialId-$filialCacheId"]);
+      departments.addAll(department.where((element) => !departments.contains(element)));
+      print(departments.length);
+
+      emit(departments.isNotEmpty ? DepartmentLoadedState({"$filialId-$filialCacheId": departments}) : DepartmentEmptyState());
     });
   }
 

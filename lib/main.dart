@@ -1,4 +1,6 @@
 import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_cubit.dart';
+import 'package:doc_hunter_app/departments/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_cubit.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/locator_service.dart' as di;
@@ -25,6 +27,10 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<FilialsListCubit>()..loadFilials()),
           BlocProvider<FilialSearchBloc>(
               create: (context) => sl<FilialSearchBloc>()),
+          BlocProvider<DepartmentsListCubit>(
+              create: (context) => sl<DepartmentsListCubit>()),
+          BlocProvider<DepartmentSearchBloc>(
+              create: (context) => sl<DepartmentSearchBloc>()),
         ],
         child: MaterialApp(
           theme: ThemeData.dark().copyWith(

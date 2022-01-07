@@ -4,8 +4,8 @@ import 'package:doc_hunter_app/departments/domain/entities/department_entity.dar
 
 abstract class IDepartmentRepository {
   Future<Either<Failure, List<DepartmentEntity>>> getAllDepartments(
-      int limit, int skip);
+      int filialId, int filialCacheId, int limit, int skip);
 
   Future<Either<Failure, List<DepartmentEntity>>> searchDepartment(
-      String query, int limit, int skip);
+      int filialId, int filialCacheId, String query, int limit, int skip);
 }

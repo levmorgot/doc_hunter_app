@@ -10,7 +10,7 @@ abstract class IDepartmentLocalDataSource {
   Future<void> departmentToCache(List<DepartmentModel> departments);
 }
 
-const cacheDepartmentsList = 'CACHE_FILIALS_LIST';
+const cacheDepartmentsList = 'CACHE_DEPARTMENTS_LIST';
 
 class DepartmentLocalDataSource implements IDepartmentLocalDataSource {
   final SharedPreferences sharedPreferences;

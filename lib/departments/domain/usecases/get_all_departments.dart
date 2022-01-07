@@ -13,6 +13,6 @@ class GetAllDepartments extends UseCase<List<DepartmentEntity>, PageDepartmentPa
   @override
   Future<Either<Failure, List<DepartmentEntity>>> call(
       PageDepartmentParams params) async {
-    return await departmentRepository.getAllDepartments(params.limit, params.skip);
+    return await departmentRepository.getAllDepartments(params.filiaId, params.filialCacheId, params.limit, params.skip);
   }
 }

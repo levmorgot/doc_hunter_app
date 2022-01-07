@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DepartmentSearchDelegate extends SearchDelegate {
+  final int filialId;
+  final int filialCacheId;
   final _suggestions = [
     'Мира',
     'Детская ',
@@ -15,7 +17,9 @@ class DepartmentSearchDelegate extends SearchDelegate {
     'Михайловская',
   ];
 
-  DepartmentSearchDelegate() : super(searchFieldLabel: 'Поиск по больницам');
+  DepartmentSearchDelegate(
+      {required this.filialId, required this.filialCacheId})
+      : super(searchFieldLabel: 'Поиск по больницам');
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -40,7 +44,13 @@ class DepartmentSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     BlocProvider.of<DepartmentSearchBloc>(context, listen: false).add(
-        SearchDepartmentsEvent(query, const PageDepartmentParams(limit: 15, skip: 0)));
+        SearchDepartmentsEvent(
+            query,
+            PageDepartmentParams(
+                limit: 15,
+                skip: 0,
+                filialCacheId: filialCacheId,
+                filiaId: filialId)));
     return BlocBuilder<DepartmentSearchBloc, DepartmentSearchState>(
         builder: (context, state) {
       if (state is DepartmentSearchLoadingState) {

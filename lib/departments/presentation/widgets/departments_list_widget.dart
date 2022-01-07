@@ -9,14 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DepartmentsList extends StatelessWidget {
   final scrollController = ScrollController();
+  final int filialId;
+  final int filialCacheId;
 
-  DepartmentsList({Key? key}) : super(key: key);
+  DepartmentsList({Key? key, required this.filialId, required this.filialCacheId}) : super(key: key);
 
-  void setupScrollController(BuildContext context) {
+  void setupScrollController(BuildContext context,  int departmentsLength) {
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.position.pixels != 0) {
-          context.read<DepartmentsListCubit>().loadDepartments();
+          context.read<DepartmentsListCubit>().loadDepartments(filialId, filialCacheId, departmentsLength);
         }
       }
     });
@@ -24,21 +26,26 @@ class DepartmentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    setupScrollController(context);
-    bool isLoading = false;
+    List<DepartmentEntity> departments = [];
 
+    setupScrollController(context, departments.length);
+    bool isLoading = false;
+    context.read<DepartmentsListCubit>().loadDepartments(filialId, filialCacheId, departments.length);
     return BlocBuilder<DepartmentsListCubit, DepartmentState>(
         builder: (context, state) {
-      List<DepartmentEntity> departments = [];
+
       if (state is DepartmentLoadingState && state.isFirstFetch) {
         return _loadingIndicator();
       } else if (state is DepartmentLoadingState) {
-        departments = state.oldDepartmentsList;
+        departments = state.oldDepartments["$filialId-$filialCacheId"] ?? [];
         isLoading = true;
       } else if (state is DepartmentErrorState) {
         return Text(state.message);
-      } else if (state is DepartmentLoadedState) {
-        departments = state.departmentsList;
+      } else if (state is DepartmentEmptyState) {
+        return const Text("Нет отделений");
+      }
+      else if (state is DepartmentLoadedState) {
+        departments = state.departmentsList["$filialId-$filialCacheId"] ?? [];
       }
       return ListView.separated(
         padding: const EdgeInsets.all(8.0),

@@ -27,20 +27,6 @@ class DepartmentCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
-            Text(
-              department.address,
-              style: const TextStyle(
-                color: AppColors.greyColor,
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              department.phone,
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
       ),

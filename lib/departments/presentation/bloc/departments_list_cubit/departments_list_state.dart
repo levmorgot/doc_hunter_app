@@ -14,18 +14,18 @@ class DepartmentEmptyState extends DepartmentState {
 }
 
 class DepartmentLoadingState extends DepartmentState {
-  final List<DepartmentEntity> oldDepartmentsList;
+  final Map<String, List<DepartmentEntity>> oldDepartments;
   final bool isFirstFetch;
 
-  const DepartmentLoadingState(this.oldDepartmentsList, {this.isFirstFetch = false});
+  const DepartmentLoadingState(this.oldDepartments, {this.isFirstFetch = false});
 
   @override
-  List<Object> get props => [oldDepartmentsList];
+  List<Object> get props => [oldDepartments];
 }
 
 
 class DepartmentLoadedState extends DepartmentState {
-  final List<DepartmentEntity> departmentsList;
+  final Map<String, List<DepartmentEntity>> departmentsList;
 
   const DepartmentLoadedState(this.departmentsList);
 

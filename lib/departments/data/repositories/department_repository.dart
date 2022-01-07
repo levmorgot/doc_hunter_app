@@ -20,22 +20,23 @@ class DepartmentRepository implements IDepartmentRepository {
 
   @override
   Future<Either<Failure, List<DepartmentEntity>>> getAllDepartments(
-      int limit, int skip) async {
+      int filialId, int filialCacheId, int limit, int skip) async {
     return _getDepartments(() {
-      return remoteDataSource.getAllDepartments(limit, skip);
+      return remoteDataSource.getAllDepartments(filialId, filialCacheId, limit, skip);
     });
   }
 
   @override
-  Future<Either<Failure, List<DepartmentEntity>>> searchDepartment(
-      String query, int limit, int skip) async {
+  Future<Either<Failure, List<DepartmentEntity>>> searchDepartment(int filialId,
+      int filialCacheId, String query, int limit, int skip) async {
     return _getDepartments(() {
-      return remoteDataSource.searchDepartment(query, limit, skip);
+      return remoteDataSource.searchDepartment(filialId, filialCacheId, query, limit, skip);
     });
   }
 
-  Future<Either<Failure, List<DepartmentModel>>> _getDepartments(Future<List<DepartmentModel>> Function() getDepartments) async {
-    if(await networkInfo.isConnected) {
+  Future<Either<Failure, List<DepartmentModel>>> _getDepartments(
+      Future<List<DepartmentModel>> Function() getDepartments) async {
+    if (await networkInfo.isConnected) {
       try {
         final remoteDepartments = await getDepartments();
         localDataSource.departmentToCache(remoteDepartments);
@@ -45,8 +46,7 @@ class DepartmentRepository implements IDepartmentRepository {
       }
     } else {
       try {
-        final localDepartments = await localDataSource.getLastDepartmentsFromCache();
-        return Right(localDepartments);
+        return const Right(<DepartmentModel>[]);
       } on CacheException {
         return Left(CacheFailure());
       }
