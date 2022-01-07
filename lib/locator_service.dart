@@ -7,6 +7,14 @@ import 'package:doc_hunter_app/departments/domain/usecases/get_all_departments.d
 import 'package:doc_hunter_app/departments/domain/usecases/search_department.dart';
 import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_cubit.dart';
 import 'package:doc_hunter_app/departments/presentation/bloc/search_bloc/search_bloc.dart';
+import 'package:doc_hunter_app/doctors/data/datasources/doctor_local_data_sources.dart';
+import 'package:doc_hunter_app/doctors/data/datasources/doctor_remote_data_sources.dart';
+import 'package:doc_hunter_app/doctors/data/repositories/doctor_repository.dart';
+import 'package:doc_hunter_app/doctors/domain/repositories/doctor_repository.dart';
+import 'package:doc_hunter_app/doctors/domain/usecases/get_all_doctors.dart';
+import 'package:doc_hunter_app/doctors/domain/usecases/search_doctor.dart';
+import 'package:doc_hunter_app/doctors/presentation/bloc/doctors_list_cubit/doctors_list_cubit.dart';
+import 'package:doc_hunter_app/doctors/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/filials/data/datasources/filial_local_data_sources.dart';
 import 'package:doc_hunter_app/filials/data/datasources/filial_remote_data_sources.dart';
 import 'package:doc_hunter_app/filials/data/repositories/filial_repository.dart';
@@ -40,12 +48,22 @@ Future<void> init() async {
         () => DepartmentSearchBloc(searchDepartment: sl()),
   );
 
+  sl.registerFactory(
+        () => DoctorsListCubit(getAllDoctors: sl(), limit: 15),
+  );
+  sl.registerFactory(
+        () => DoctorSearchBloc(searchDoctor: sl()),
+  );
+
   // UseCases
   sl.registerLazySingleton(() => GetAllFilials(sl()));
   sl.registerLazySingleton(() => SearchFilial(sl()));
 
   sl.registerLazySingleton(() => GetAllDepartments(sl()));
   sl.registerLazySingleton(() => SearchDepartment(sl()));
+
+  sl.registerLazySingleton(() => GetAllDoctors(sl()));
+  sl.registerLazySingleton(() => SearchDoctor(sl()));
 
   // Repository
   sl.registerLazySingleton<IFilialRepository>(
@@ -84,6 +102,25 @@ Future<void> init() async {
 
   sl.registerLazySingleton<IDepartmentLocalDataSource>(
         () => DepartmentLocalDataSource(sharedPreferences: sl()),
+  );
+
+  //doctors
+  sl.registerLazySingleton<IDoctorRepository>(
+        () => DoctorRepository(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<IDoctorRemoteDataSource>(
+        () => DoctorRemoteDataSource(
+      client: http.Client(),
+    ),
+  );
+
+  sl.registerLazySingleton<IDoctorLocalDataSource>(
+        () => DoctorLocalDataSource(sharedPreferences: sl()),
   );
 
   // Core
