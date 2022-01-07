@@ -35,7 +35,7 @@ class FilialsListCubit extends Cubit<FilialState> {
       skip += limit;
       final filials = (state as FilialLoadingState).oldFilialsList;
       filials.addAll(filial);
-      emit(FilialLoadedState(filials));
+      emit(FilialLoadedState(filials, filial.isEmpty));
     });
   }
 

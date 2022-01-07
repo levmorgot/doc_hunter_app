@@ -30,6 +30,7 @@ class FilialsList extends StatelessWidget {
     return BlocBuilder<FilialsListCubit, FilialState>(
         builder: (context, state) {
       List<FilialEntity> filials = [];
+      bool thatAll = false;
       if (state is FilialLoadingState && state.isFirstFetch) {
         return _loadingIndicator();
       } else if (state is FilialLoadingState) {
@@ -39,6 +40,7 @@ class FilialsList extends StatelessWidget {
         return Text(state.message);
       } else if (state is FilialLoadedState) {
         filials = state.filialsList;
+        thatAll = state.thatAll;
       }
       return ListView.separated(
         padding: const EdgeInsets.all(8.0),
@@ -59,7 +61,7 @@ class FilialsList extends StatelessWidget {
             color: Colors.grey[400],
           );
         },
-        itemCount: filials.length + (isLoading ? 1 : 0),
+        itemCount: filials.length + (isLoading && !thatAll ? 1 : 0),
       );
     });
   }

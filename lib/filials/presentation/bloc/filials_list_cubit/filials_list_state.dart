@@ -26,8 +26,9 @@ class FilialLoadingState extends FilialState {
 
 class FilialLoadedState extends FilialState {
   final List<FilialEntity> filialsList;
+  final bool thatAll;
 
-  const FilialLoadedState(this.filialsList);
+  const FilialLoadedState(this.filialsList, this.thatAll);
 
   @override
   List<Object> get props => [filialsList];
