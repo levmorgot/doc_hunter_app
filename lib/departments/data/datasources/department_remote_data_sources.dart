@@ -29,7 +29,6 @@ class DepartmentRemoteDataSource implements IDepartmentRemoteDataSource {
   }
 
   Future<List<DepartmentModel>> _getDepartmentsFromUrl(String url) async {
-    print(url);
     final response = await client
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {

@@ -37,10 +37,7 @@ class DepartmentsListCubit extends Cubit<DepartmentState> {
             emit(DepartmentErrorState(message: _mapFailureMessage(failure))),
         (department) {
       final departments = (state as DepartmentLoadingState).oldDepartments["$filialId-$filialCacheId"] ?? [];
-      print((state as DepartmentLoadingState).oldDepartments);
-      print(["$filialId-$filialCacheId"]);
       departments.addAll(department.where((element) => !departments.contains(element)));
-      print(departments.length);
 
       emit(departments.isNotEmpty ? DepartmentLoadedState({"$filialId-$filialCacheId": departments}) : DepartmentEmptyState());
     });
