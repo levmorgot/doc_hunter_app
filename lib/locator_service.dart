@@ -23,6 +23,12 @@ import 'package:doc_hunter_app/filials/domain/usecases/get_all_filials.dart';
 import 'package:doc_hunter_app/filials/domain/usecases/search_filial.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_cubit.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
+import 'package:doc_hunter_app/schedules/data/datasources/schedule_remote_data_sources.dart';
+import 'package:doc_hunter_app/schedules/data/repositories/schedule_repository.dart';
+import 'package:doc_hunter_app/schedules/domain/repositories/schedule_repository.dart';
+import 'package:doc_hunter_app/schedules/domain/usecases/get_all_date.dart';
+import 'package:doc_hunter_app/schedules/domain/usecases/get_all_time_for_date.dart';
+import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:http/http.dart' as http;
@@ -55,6 +61,10 @@ Future<void> init() async {
         () => DoctorSearchBloc(searchDoctor: sl()),
   );
 
+  sl.registerFactory(
+        () => DateBloc(getAllDate: sl()),
+  );
+
   // UseCases
   sl.registerLazySingleton(() => GetAllFilials(sl()));
   sl.registerLazySingleton(() => SearchFilial(sl()));
@@ -65,7 +75,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllDoctors(sl()));
   sl.registerLazySingleton(() => SearchDoctor(sl()));
 
-  // Repository
+  sl.registerLazySingleton(() => GetAllDate(sl()));
+  sl.registerLazySingleton(() => GetAllTimeForDate(sl()));
+
+  // Repository filial
   sl.registerLazySingleton<IFilialRepository>(
     () => FilialRepository(
       remoteDataSource: sl(),
@@ -85,7 +98,7 @@ Future<void> init() async {
   );
 
 
-  //departments
+  // Repository departments
   sl.registerLazySingleton<IDepartmentRepository>(
         () => DepartmentRepository(
       remoteDataSource: sl(),
@@ -104,7 +117,7 @@ Future<void> init() async {
         () => DepartmentLocalDataSource(sharedPreferences: sl()),
   );
 
-  //doctors
+  // Repository doctors
   sl.registerLazySingleton<IDoctorRepository>(
         () => DoctorRepository(
       remoteDataSource: sl(),
@@ -121,6 +134,20 @@ Future<void> init() async {
 
   sl.registerLazySingleton<IDoctorLocalDataSource>(
         () => DoctorLocalDataSource(sharedPreferences: sl()),
+  );
+
+
+  // Repository schedule
+  sl.registerLazySingleton<IScheduleRepository>(
+        () => ScheduleRepository(
+      remoteDataSource: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<IScheduleRemoteDataSource>(
+        () => ScheduleRemoteDataSource(
+      client: http.Client(),
+    ),
   );
 
   // Core

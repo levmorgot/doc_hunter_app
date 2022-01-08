@@ -19,7 +19,9 @@ class DoctorSearchDelegate extends SearchDelegate {
   ];
 
   DoctorSearchDelegate(
-      {required this.filialId, required this.filialCacheId, required this.departmentId})
+      {required this.filialId,
+      required this.filialCacheId,
+      required this.departmentId})
       : super(searchFieldLabel: 'Поиск по больницам');
 
   @override
@@ -51,7 +53,8 @@ class DoctorSearchDelegate extends SearchDelegate {
                 limit: 15,
                 skip: 0,
                 filialCacheId: filialCacheId,
-                filiaId: filialId, departmentId: departmentId)));
+                filiaId: filialId,
+                departmentId: departmentId)));
     return BlocBuilder<DoctorSearchBloc, DoctorSearchState>(
         builder: (context, state) {
       if (state is DoctorSearchLoadingState) {
@@ -68,7 +71,12 @@ class DoctorSearchDelegate extends SearchDelegate {
           itemCount: doctors.isNotEmpty ? doctors.length : 0,
           itemBuilder: (context, index) {
             DoctorEntity result = doctors[index];
-            return DoctorCard(doctor: result);
+            return DoctorCard(
+              doctor: result,
+              filialId: filialId,
+              departmentId: departmentId,
+              filialCacheId: filialCacheId,
+            );
           },
           separatorBuilder: (context, index) {
             return Divider(

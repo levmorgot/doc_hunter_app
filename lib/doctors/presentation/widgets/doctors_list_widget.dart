@@ -14,7 +14,10 @@ class DoctorsList extends StatelessWidget {
   final int departmentId;
 
   DoctorsList(
-      {Key? key, required this.filialId, required this.filialCacheId, required this.departmentId})
+      {Key? key,
+      required this.filialId,
+      required this.filialCacheId,
+      required this.departmentId})
       : super(key: key);
 
   void setupScrollController(BuildContext context) {
@@ -44,14 +47,16 @@ class DoctorsList extends StatelessWidget {
       if (state is DoctorLoadingState && state.isFirstFetch) {
         return _loadingIndicator();
       } else if (state is DoctorLoadingState) {
-        doctors = state.oldDoctors["$filialId-$filialCacheId-$departmentId"] ?? [];
+        doctors =
+            state.oldDoctors["$filialId-$filialCacheId-$departmentId"] ?? [];
         isLoading = true;
       } else if (state is DoctorErrorState) {
         return Text(state.message);
       } else if (state is DoctorEmptyState) {
         return const Text("Нет отделений");
       } else if (state is DoctorLoadedState) {
-        doctors = state.doctorsList["$filialId-$filialCacheId-$departmentId"] ?? [];
+        doctors =
+            state.doctorsList["$filialId-$filialCacheId-$departmentId"] ?? [];
         thatAll = state.thatAll;
       }
       return ListView.separated(
@@ -59,7 +64,12 @@ class DoctorsList extends StatelessWidget {
         controller: scrollController,
         itemBuilder: (context, index) {
           if (index < doctors.length) {
-            return DoctorCard(doctor: doctors[index]);
+            return DoctorCard(
+              doctor: doctors[index],
+              filialId: filialId,
+              departmentId: departmentId,
+              filialCacheId: filialCacheId,
+            );
           } else {
             Timer(const Duration(milliseconds: 30), () {
               scrollController

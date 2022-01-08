@@ -6,6 +6,7 @@ import 'package:doc_hunter_app/doctors/presentation/bloc/search_bloc/search_bloc
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_cubit.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/locator_service.dart' as di;
+import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<DoctorsListCubit>()),
           BlocProvider<DoctorSearchBloc>(
               create: (context) => sl<DoctorSearchBloc>()),
+          BlocProvider<DateBloc>(
+              create: (context) => sl<DateBloc>()),
         ],
         child: MaterialApp(
           theme: ThemeData.dark().copyWith(
