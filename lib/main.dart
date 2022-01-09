@@ -9,7 +9,8 @@ import 'package:doc_hunter_app/locator_service.dart' as di;
 import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'filials/presentation/pages/filials_screen.dart';
 import 'locator_service.dart';
 
@@ -42,6 +43,18 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<DateBloc>()),
         ],
         child: MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            // ... app-specific localization delegate[s] here
+            SfGlobalLocalizations.delegate
+          ],
+          //ignore: always_specify_types
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ru'),
+            // ... other locales the app supports
+          ],
+          locale: const Locale('ru'),
           theme: ThemeData.dark().copyWith(
             backgroundColor: AppColors.mainBackground,
             scaffoldBackgroundColor: AppColors.mainBackground,

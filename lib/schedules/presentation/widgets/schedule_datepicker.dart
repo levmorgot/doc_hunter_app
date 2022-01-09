@@ -5,6 +5,7 @@ import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_event.
 import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ScheduleDatePicker extends StatelessWidget {
   final int filialId;
@@ -12,11 +13,12 @@ class ScheduleDatePicker extends StatelessWidget {
   final int departmentId;
   final int doctorId;
 
-  const ScheduleDatePicker({Key? key,
-    required this.filialId,
-    required this.filialCacheId,
-    required this.departmentId,
-    required this.doctorId})
+  const ScheduleDatePicker(
+      {Key? key,
+      required this.filialId,
+      required this.filialCacheId,
+      required this.departmentId,
+      required this.doctorId})
       : super(key: key);
 
   @override
@@ -40,25 +42,46 @@ class ScheduleDatePicker extends StatelessWidget {
           child: Icon(Icons.now_wallpaper),
         );
       }
-      void onDateChanged(DateTime _date) {
-        print(dates);
-        print(_date.toUtc());
-        print(dates.where((element) => element.date == "${_date.year}${_date.month}${_date.day}"));
-      }
-      return CalendarDatePicker(initialDate: DateTime(int.parse(dates[0].date.substring(0,4)), int.parse(dates[0].date.substring(4,6)), int.parse(dates[0].date.substring(6,8))),
-          firstDate: DateTime.now(),
-          lastDate: DateTime.now().add(const Duration(days: 62)),
-          onDateChanged: onDateChanged,
-          selectableDayPredicate: (DateTime val) =>
-          dates.where((element) => element.date == "${val.year}${val.month}${val.day}").isNotEmpty ? false : true,
 
+      return SizedBox(
+        height: 300,
+        child: SfDateRangePicker(
+          onSelectionChanged: _onSelectionChanged,
+          selectionMode: DateRangePickerSelectionMode.single,
+          minDate: DateTime.now(),
+          maxDate: DateTime.now().add(const Duration(days: 62)),
+          monthViewSettings: DateRangePickerMonthViewSettings(
+            firstDayOfWeek: 1,
+            specialDates: _getFreeTime(dates),
+          ),
+          monthCellStyle: DateRangePickerMonthCellStyle(
+            weekendDatesDecoration: BoxDecoration(
+                color: Colors.grey,
+                border: Border.all(color: Colors.white, width: 1),
+                shape: BoxShape.circle),
+            specialDatesDecoration: BoxDecoration(
+                color: Colors.green,
+                border: Border.all(color: const Color(0xFF2B732F), width: 1),
+                shape: BoxShape.circle),
+            specialDatesTextStyle: const TextStyle(color: Colors.white),
+          ),
+        ),
       );
-
     });
-
   }
 
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    print(args.value);
+  }
 
+  List<DateTime> _getFreeTime(List<DateEntity> dates) {
+    return dates
+        .map((e) => DateTime(
+            int.parse(e.date.substring(0, 4)),
+            int.parse(e.date.substring(4, 6)),
+            int.parse(e.date.substring(6, 8))))
+        .toList();
+  }
 
   Widget _loadingIndicator() {
     return const Padding(
