@@ -7,8 +7,6 @@ import 'package:doc_hunter_app/schedules/presentation/bloc/time_bloc/time_event.
 import 'package:doc_hunter_app/schedules/presentation/bloc/time_bloc/time_state.dart';
 import 'package:doc_hunter_app/schedules/presentation/widgets/timepicker_elemet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScheduleTimePicker extends StatelessWidget {
@@ -33,8 +31,6 @@ class ScheduleTimePicker extends StatelessWidget {
       },
       builder: (context, selectedDate) {
         if (selectedDate != null) {
-          print(selectedDate);
-          print(BlocProvider.of<TimeBloc>(context).state);
           BlocProvider.of<TimeBloc>(context, listen: false).add(GetTimeEvent(
               ScheduleTimeParams(
                   filialCacheId: filialCacheId,

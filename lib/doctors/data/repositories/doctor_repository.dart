@@ -19,37 +19,76 @@ class DoctorRepository implements IDoctorRepository {
       required this.networkInfo});
 
   @override
-  Future<Either<Failure, List<DoctorEntity>>> getAllDoctors(
-      int filialId, int filialCacheId, int departmentId, int limit, int skip) async {
-    return _getDoctors(() {
-      return remoteDataSource.getAllDoctors(filialId, filialCacheId, departmentId, limit, skip);
+  Future<Either<Failure, List<DoctorEntity>>> getAllDoctors(int filialId,
+      int filialCacheId, int departmentId, int limit, int skip) async {
+    final allDoctors =
+        await _getDoctors(filialId, filialCacheId, departmentId, () {
+      return remoteDataSource.getAllDoctors(
+          filialId, filialCacheId, departmentId);
     });
+    return allDoctors.fold((failure) => Left(failure),
+        (doctors) => Right(doctors.sublist(skip, skip + limit >= doctors.length ? null : skip + limit)));
   }
 
   @override
-  Future<Either<Failure, List<DoctorEntity>>> searchDoctor(int filialId,
-      int filialCacheId, int departmentId, String query, int limit, int skip) async {
-    return _getDoctors(() {
-      return remoteDataSource.searchDoctor(filialId, filialCacheId, departmentId, query, limit, skip);
+  Future<Either<Failure, List<DoctorEntity>>> searchDoctor(
+      int filialId,
+      int filialCacheId,
+      int departmentId,
+      String query,
+      int limit,
+      int skip) async {
+    final allDoctors =
+        await _getDoctors(filialId, filialCacheId, departmentId, () {
+      return remoteDataSource.getAllDoctors(
+          filialId, filialCacheId, departmentId);
     });
+    return allDoctors.fold(
+        (failure) => Left(failure),
+        (doctors) => Right(doctors
+            .where((element) => element.name.toLowerCase().contains(query.toLowerCase()))
+            .toList()
+            .sublist(skip, skip + limit >= doctors.length ? null : skip + limit)));
+  }
+
+  Future<Either<Failure, String>> _getLastEdit(
+      int filialId, int filialCacheId, int departmentId) async {
+    try {
+      final lastEdit = await localDataSource.getLastEdit(
+          filialId, filialCacheId, departmentId);
+      return Right(lastEdit);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
   }
 
   Future<Either<Failure, List<DoctorModel>>> _getDoctors(
+      int filialId,
+      int filialCacheId,
+      int departmentId,
       Future<List<DoctorModel>> Function() getDoctors) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteDoctors = await getDoctors();
-        localDataSource.doctorToCache(remoteDoctors);
-        return Right(remoteDoctors);
-      } on ServerException {
-        return Left(ServerFailure());
+    final lastEdit = await _getLastEdit(filialId, filialCacheId, departmentId);
+    return lastEdit.fold((failure) => Left(failure), (date) async {
+      if (date != DateTime.now().toString().substring(0, 10)) {
+        try {
+          final remoteDoctors = await getDoctors();
+          localDataSource.lastEditToCache(filialId, filialCacheId, departmentId,
+              DateTime.now().toString().substring(0, 10));
+          localDataSource.doctorToCache(
+              filialId, filialCacheId, departmentId, remoteDoctors);
+          return Right(remoteDoctors);
+        } on ServerException {
+          return Left(ServerFailure());
+        }
+      } else {
+        try {
+          final localFilials = await localDataSource.getLastDoctorsFromCache(
+              filialId, filialCacheId, departmentId);
+          return Right(localFilials);
+        } on CacheException {
+          return Left(CacheFailure());
+        }
       }
-    } else {
-      try {
-        return const Right(<DoctorModel>[]);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
-    }
+    });
   }
 }
