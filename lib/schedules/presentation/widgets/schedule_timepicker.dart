@@ -75,7 +75,7 @@ class ScheduleTimePicker extends StatelessWidget {
   Widget _timesList(List<TimeEntity> times) {
     List<Widget> timesList = [];
     for (var elem in times) {
-      timesList.add(TimepickerElement(time: elem.time));
+      timesList.add(TimepickerElement(time: elem.time, isFree: elem.isFree));
     }
 
     return Container(

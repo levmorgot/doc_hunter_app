@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class TimepickerElement extends StatelessWidget {
   final String time;
+  final bool isFree;
 
-  const TimepickerElement({Key? key, required this.time}) : super(key: key);
+  const TimepickerElement({Key? key, required this.time, required this.isFree}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class TimepickerElement extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       height: 15,
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: isFree ? Colors.green : Colors.red,
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(

@@ -21,25 +21,51 @@ class ScheduleRemoteDataSource implements IScheduleRemoteDataSource {
   @override
   Future<List<DateModel>> getAllDate(
       int filialId, int filialCacheId, int departmentId, int doctorId) async {
+    var start = DateTime.now();
+    var end = start.add(const Duration(days: 62));
     var data = await _getDataFromUrl(
-        'http://89.108.83.99:8000/schedule/$filialId-$filialCacheId-$departmentId-$doctorId/dates');
-    return data.map((date) => DateModel.fromJson(date)).toList();
+        'https://registratura.volganet.ru/api/reservation/schedule?st=${_dateToString(start)}&en=${_dateToString(end)}&doctor=$doctorId&filialId=$filialId&cashlist=$filialCacheId&speclist=$departmentId');
+    final freeDates = _filterFreeDate(data['intervals'] ?? []);
+    return freeDates.map((date) {
+      return DateModel.fromJson(date);
+    }).toList();
+  }
+
+  String _dateToString(DateTime date) {
+    final String stringDate = date.toString();
+    return stringDate.substring(0, 4) +
+        stringDate.substring(5, 7) +
+        stringDate.substring(8, 10);
+  }
+
+  List<Map<String, dynamic>> _filterFreeDate(List<dynamic> dates) {
+    return dates
+        .where((date) => date['isFree'])
+        .map((date) => {
+              'date': date['workDate'],
+              'startInterval': date['startInterval'],
+              'endInterval': date['endInterval']
+            })
+        .toList();
   }
 
   @override
   Future<List<TimeModel>> getAllTimeForDate(int filialId, int filialCacheId,
       int departmentId, int doctorId, String date) async {
     var data = await _getDataFromUrl(
-        'http://89.108.83.99:8000/schedule/$filialId-$filialCacheId-$departmentId-$doctorId-$date/times');
-    return data.map((time) => TimeModel.fromJson(time)).toList();
+        'https://registratura.volganet.ru/api/reservation/intervals?st=$date&en=$date&spec=$departmentId&dcode=$doctorId&filialId=$filialId&cashlist=$filialCacheId&inFilials=$filialId');
+    List<dynamic> times = data['workdates'][0][date][0]['intervals'];
+    var aaa = times.map((time) => TimeModel.fromJson(time)).toList();
+    return aaa;
   }
 
-  Future<List<dynamic>> _getDataFromUrl(String url) async {
+
+  Future<Map<String, dynamic>> _getDataFromUrl(String url) async {
     print(url);
     final response = await client
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
-      return json.decode(utf8.decode(response.bodyBytes));
+      return json.decode(response.body)['data'][0];
     } else {
       throw ServerException();
     }
