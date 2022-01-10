@@ -7,10 +7,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class IFilialLocalDataSource {
   Future<List<FilialModel>> getLastFilialsFromCache();
 
+  Future<String> getLastEdit();
+
   Future<void> filialToCache(List<FilialModel> filials);
+
+  Future<void> lastEditToCache(String lastEdit);
 }
 
 const cacheFilialsList = 'CACHE_FILIALS_LIST';
+const cacheFilialsLastEdit = 'CACHE_FILIALS_LAST_EDIT';
 
 class FilialLocalDataSource implements IFilialLocalDataSource {
   final SharedPreferences sharedPreferences;
@@ -33,12 +38,33 @@ class FilialLocalDataSource implements IFilialLocalDataSource {
         return Future.value(jsonFilialList
             .map((filial) => FilialModel.fromJson(json.decode(filial)))
             .toList());
-      } catch(e) {
+      } catch (e) {
         throw CacheException();
       }
-
+    } else if (jsonFilialList != null && jsonFilialList.isEmpty) {
+      return Future.value([]);
     } else {
       throw CacheException();
     }
+  }
+
+  @override
+  Future<String> getLastEdit() {
+    final jsonDoctorLastEdit = sharedPreferences.getString(cacheFilialsLastEdit);
+    if (jsonDoctorLastEdit != null && jsonDoctorLastEdit.isNotEmpty) {
+      try {
+        return Future.value(jsonDoctorLastEdit);
+      } catch (e) {
+        throw CacheException();
+      }
+    } else {
+      return Future.value("");
+    }
+  }
+
+  @override
+  Future<void> lastEditToCache(String lastEdit) {
+    sharedPreferences.setString(cacheFilialsLastEdit, lastEdit);
+    return Future.value();
   }
 }

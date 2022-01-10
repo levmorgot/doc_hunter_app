@@ -5,9 +5,7 @@ import 'package:doc_hunter_app/filials/data/models/filial_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IFilialRemoteDataSource {
-  Future<List<FilialModel>> getAllFilials(int limit, int skip);
-
-  Future<List<FilialModel>> searchFilial(String query, int limit, int skip);
+  Future<List<FilialModel>> getAllFilials();
 }
 
 class FilialRemoteDataSource implements IFilialRemoteDataSource {
@@ -16,23 +14,17 @@ class FilialRemoteDataSource implements IFilialRemoteDataSource {
   FilialRemoteDataSource({required this.client});
 
   @override
-  Future<List<FilialModel>> getAllFilials(int limit, int skip) async {
+  Future<List<FilialModel>> getAllFilials() async {
     return await _getFilialsFromUrl(
-        'http://89.108.83.99:8000/filials/?limit=$limit&skip=$skip');
-  }
-
-  @override
-  Future<List<FilialModel>> searchFilial(
-      String query, int limit, int skip) async {
-    return await _getFilialsFromUrl(
-        'http://89.108.83.99:8000/filials/?search_string=$query&limit=1000&skip=$skip');
+        'https://registratura.volganet.ru/filial');
   }
 
   Future<List<FilialModel>> _getFilialsFromUrl(String url) async {
+    print(url);
     final response = await client
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
-      final filials = json.decode(utf8.decode(response.bodyBytes));
+      final filials = json.decode(response.body)['data'];
       return (filials as List)
           .map((filial) => FilialModel.fromJson(filial))
           .toList();

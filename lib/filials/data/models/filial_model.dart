@@ -16,11 +16,11 @@ class FilialModel extends FilialEntity {
 
   factory FilialModel.fromJson(Map<String, dynamic> json) {
     return FilialModel(
-      id: json['id'],
-      cashId: json['cashId'],
-      name: json['name'],
-      address: json['address'],
-      phone: json['phone'],
+      id: json['id'] ?? -1,
+      cashId: json['cashId'] ?? -1,
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      phone: json['phone'] ?? '',
     );
   }
 

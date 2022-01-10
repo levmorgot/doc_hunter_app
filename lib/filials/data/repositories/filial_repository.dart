@@ -21,35 +21,63 @@ class FilialRepository implements IFilialRepository {
   @override
   Future<Either<Failure, List<FilialEntity>>> getAllFilials(
       int limit, int skip) async {
-    return _getFilials(() {
-      return remoteDataSource.getAllFilials(limit, skip);
+    final allFilials = await _getFilials(() {
+      return remoteDataSource.getAllFilials();
     });
+    return allFilials.fold(
+        (failure) => Left(failure),
+        (filials) => Right(filials.sublist(
+            skip, skip + limit >= filials.length ? null : skip + limit)));
   }
 
   @override
   Future<Either<Failure, List<FilialEntity>>> searchFilial(
       String query, int limit, int skip) async {
-    return _getFilials(() {
-      return remoteDataSource.searchFilial(query, limit, skip);
+    final allFilials = await _getFilials(() {
+      return remoteDataSource.getAllFilials();
     });
+    return allFilials.fold(
+        (failure) => Left(failure),
+        (filials) => Right(filials
+            .where((element) =>
+                element.name.toLowerCase().contains(query.toLowerCase()) ||
+                element.address.toLowerCase().contains(query.toLowerCase()))
+            .toList()
+            .sublist(
+                skip, skip + limit >= filials.length ? null : skip + limit)));
   }
 
-  Future<Either<Failure, List<FilialModel>>> _getFilials(Future<List<FilialModel>> Function() getFilials) async {
-    if(await networkInfo.isConnected) {
-      try {
-        final remoteFilials = await getFilials();
-        localDataSource.filialToCache(remoteFilials);
-        return Right(remoteFilials);
-      } on ServerException {
-        return Left(ServerFailure());
-      }
-    } else {
-      try {
-        final localFilials = await localDataSource.getLastFilialsFromCache();
-        return Right(localFilials);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
+  Future<Either<Failure, String>> _getLastEdit() async {
+    try {
+      final lastEdit = await localDataSource.getLastEdit();
+      return Right(lastEdit);
+    } on CacheException {
+      return Left(CacheFailure());
     }
+  }
+
+  Future<Either<Failure, List<FilialModel>>> _getFilials(
+      Future<List<FilialModel>> Function() getFilials) async {
+    final lastEdit = await _getLastEdit();
+    return lastEdit.fold((failure) => Left(failure), (date) async {
+      if (date != DateTime.now().toString().substring(0, 10)) {
+        try {
+          final remoteFilials = await getFilials();
+          localDataSource
+              .lastEditToCache(DateTime.now().toString().substring(0, 10));
+          localDataSource.filialToCache(remoteFilials);
+          return Right(remoteFilials);
+        } on ServerException {
+          return Left(ServerFailure());
+        }
+      } else {
+        try {
+          final localFilials = await localDataSource.getLastFilialsFromCache();
+          return Right(localFilials);
+        } on CacheException {
+          return Left(CacheFailure());
+        }
+      }
+    });
   }
 }
