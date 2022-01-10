@@ -54,9 +54,13 @@ class ScheduleRemoteDataSource implements IScheduleRemoteDataSource {
       int departmentId, int doctorId, String date) async {
     var data = await _getDataFromUrl(
         'https://registratura.volganet.ru/api/reservation/intervals?st=$date&en=$date&spec=$departmentId&dcode=$doctorId&filialId=$filialId&cashlist=$filialCacheId&inFilials=$filialId');
-    List<dynamic> times = data['workdates'][0][date][0]['intervals'];
-    var aaa = times.map((time) => TimeModel.fromJson(time)).toList();
-    return aaa;
+    if (data.isNotEmpty) {
+      List<dynamic> times = data['workdates'][0][date][0]['intervals'];
+      return times.map((time) => TimeModel.fromJson(time)).toList();
+    } else {
+      return [];
+    }
+
   }
 
 
@@ -65,7 +69,8 @@ class ScheduleRemoteDataSource implements IScheduleRemoteDataSource {
     final response = await client
         .get(Uri.parse(url), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
-      return json.decode(response.body)['data'][0];
+      List<dynamic> resp = json.decode(response.body)['data'];
+      return resp.isNotEmpty ? resp[0] : {};
     } else {
       throw ServerException();
     }

@@ -81,7 +81,7 @@ class ScheduleTimePicker extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10),
       child: GridView.count(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         childAspectRatio: 3,
         mainAxisSpacing: 20.0,
         crossAxisSpacing: 20.0,
