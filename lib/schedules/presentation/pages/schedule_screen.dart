@@ -1,4 +1,5 @@
 import 'package:doc_hunter_app/schedules/presentation/widgets/schedule_datepicker.dart';
+import 'package:doc_hunter_app/schedules/presentation/widgets/schedule_timepicker.dart';
 import 'package:flutter/material.dart';
 
 class SchedulePage extends StatelessWidget {
@@ -22,11 +23,28 @@ class SchedulePage extends StatelessWidget {
         title: const Text('Расписание'),
         centerTitle: true,
       ),
-      body: ScheduleDatePicker(
-        filialId: filialId,
-        filialCacheId: filialCacheId,
-        departmentId: departmentId,
-        doctorId: doctorId,
+      body: SingleChildScrollView(
+        child: Column(children: [
+          ScheduleDatePicker(
+            filialId: filialId,
+            filialCacheId: filialCacheId,
+            departmentId: departmentId,
+            doctorId: doctorId,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Divider(),
+          const SizedBox(
+            height: 20,
+          ),
+          ScheduleTimePicker(
+            filialId: filialId,
+            filialCacheId: filialCacheId,
+            departmentId: departmentId,
+            doctorId: doctorId,
+          ),
+        ]),
       ),
     );
   }

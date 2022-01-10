@@ -14,8 +14,9 @@ class DateLoadingState extends DateState {}
 
 class DateLoadedState extends DateState {
   final List<DateEntity> dates;
+  final String? selectedDate;
 
-  const DateLoadedState({required this.dates});
+  const DateLoadedState({required this.dates, this.selectedDate});
 
   @override
   List<Object> get props => [dates];

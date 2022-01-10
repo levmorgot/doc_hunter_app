@@ -13,3 +13,10 @@ class GetDateEvent extends DateEvent {
 
   const GetDateEvent(this.dateParams);
 }
+
+class SelectDateEvent extends DateEvent {
+  final String selectedDate;
+
+
+  const SelectDateEvent(this.selectedDate);
+}

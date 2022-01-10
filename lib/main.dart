@@ -7,6 +7,7 @@ import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/fili
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:doc_hunter_app/locator_service.dart' as di;
 import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
+import 'package:doc_hunter_app/schedules/presentation/bloc/time_bloc/time_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<DoctorSearchBloc>()),
           BlocProvider<DateBloc>(
               create: (context) => sl<DateBloc>()),
+          BlocProvider<TimeBloc>(
+              create: (context) => sl<TimeBloc>()),
         ],
         child: MaterialApp(
           localizationsDelegates: const [

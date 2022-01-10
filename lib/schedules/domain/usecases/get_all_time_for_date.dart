@@ -12,7 +12,7 @@ class GetAllTimeForDate extends UseCase<List<TimeEntity>, ScheduleTimeParams> {
 
   @override
   Future<Either<Failure, List<TimeEntity>>> call(ScheduleTimeParams params) async {
-    return await scheduleRepository.getAllTimeForDate(params.filiaId,
+    return await scheduleRepository.getAllTimeForDate(params.filialId,
         params.filialCacheId, params.departmentId, params.doctorId, params.date);
   }
 }

@@ -21,6 +21,13 @@ class DateBloc extends Bloc<DateEvent, DateState> {
           (failure) => DateErrorState(message: _mapFailureMessage(failure)),
           (dates) => DateLoadedState(dates: dates)));
     });
+    on<SelectDateEvent>((event, emit) async {
+      var currentState = state;
+      emit(DateLoadingState());
+      emit(DateLoadedState(
+          dates: (currentState as DateLoadedState).dates,
+          selectedDate: event.selectedDate));
+    });
   }
 
   String _mapFailureMessage(Failure failure) {

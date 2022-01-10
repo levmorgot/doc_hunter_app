@@ -29,6 +29,7 @@ import 'package:doc_hunter_app/schedules/domain/repositories/schedule_repository
 import 'package:doc_hunter_app/schedules/domain/usecases/get_all_date.dart';
 import 'package:doc_hunter_app/schedules/domain/usecases/get_all_time_for_date.dart';
 import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
+import 'package:doc_hunter_app/schedules/presentation/bloc/time_bloc/time_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:http/http.dart' as http;
@@ -63,6 +64,10 @@ Future<void> init() async {
 
   sl.registerFactory(
         () => DateBloc(getAllDate: sl()),
+  );
+
+  sl.registerFactory(
+        () => TimeBloc(getAllTimeForDate: sl()),
   );
 
   // UseCases

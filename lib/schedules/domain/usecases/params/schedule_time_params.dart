@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 class ScheduleTimeParams extends Equatable {
-  final int filiaId;
+  final int filialId;
   final int filialCacheId;
   final int departmentId;
   final int doctorId;
   final String date;
 
   const ScheduleTimeParams({
-    required this.filiaId,
+    required this.filialId,
     required this.filialCacheId,
     required this.departmentId,
     required this.doctorId,
@@ -17,5 +17,5 @@ class ScheduleTimeParams extends Equatable {
 
 
   @override
-  List<Object?> get props => [filiaId, filialCacheId, departmentId, doctorId, date];
+  List<Object?> get props => [filialId, filialCacheId, departmentId, doctorId, date];
 }

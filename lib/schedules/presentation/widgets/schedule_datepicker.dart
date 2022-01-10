@@ -43,6 +43,14 @@ class ScheduleDatePicker extends StatelessWidget {
         );
       }
 
+      void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+        String selectedDate = args.value.toString();
+        String date = selectedDate.substring(0, 4) +
+            selectedDate.substring(5, 7) +
+            selectedDate.substring(8, 10);
+        context.read<DateBloc>().add(SelectDateEvent(date));
+      }
+
       return SizedBox(
         height: 300,
         child: SfDateRangePicker(
@@ -57,7 +65,7 @@ class ScheduleDatePicker extends StatelessWidget {
           monthCellStyle: DateRangePickerMonthCellStyle(
             weekendDatesDecoration: BoxDecoration(
                 color: Colors.grey,
-                border: Border.all(color: Colors.white, width: 1),
+                border: Border.all(color: Colors.grey.shade700, width: 1),
                 shape: BoxShape.circle),
             specialDatesDecoration: BoxDecoration(
                 color: Colors.green,
@@ -68,10 +76,6 @@ class ScheduleDatePicker extends StatelessWidget {
         ),
       );
     });
-  }
-
-  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    print(args.value);
   }
 
   List<DateTime> _getFreeTime(List<DateEntity> dates) {
