@@ -26,8 +26,10 @@ class DoctorRepository implements IDoctorRepository {
       return remoteDataSource.getAllDoctors(
           filialId, filialCacheId, departmentId);
     });
-    return allDoctors.fold((failure) => Left(failure),
-        (doctors) => Right(doctors.sublist(skip, skip + limit >= doctors.length ? null : skip + limit)));
+    return allDoctors.fold(
+        (failure) => Left(failure),
+        (doctors) => Right(doctors.sublist(
+            skip, skip + limit >= doctors.length ? null : skip + limit)));
   }
 
   @override
@@ -46,9 +48,11 @@ class DoctorRepository implements IDoctorRepository {
     return allDoctors.fold(
         (failure) => Left(failure),
         (doctors) => Right(doctors
-            .where((element) => element.name.toLowerCase().contains(query.toLowerCase()))
+            .where((element) =>
+                element.name.toLowerCase().contains(query.toLowerCase()))
             .toList()
-            .sublist(skip, skip + limit >= doctors.length ? null : skip + limit)));
+            .sublist(
+                skip, skip + limit >= doctors.length ? null : skip + limit)));
   }
 
   Future<Either<Failure, String>> _getLastEdit(

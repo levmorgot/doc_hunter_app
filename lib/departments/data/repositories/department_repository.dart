@@ -21,35 +21,71 @@ class DepartmentRepository implements IDepartmentRepository {
   @override
   Future<Either<Failure, List<DepartmentEntity>>> getAllDepartments(
       int filialId, int filialCacheId, int limit, int skip) async {
-    return _getDepartments(() {
-      return remoteDataSource.getAllDepartments(filialId, filialCacheId, limit, skip);
+    final allDepartments = await _getDepartments(filialId, filialCacheId, () {
+      return remoteDataSource.getAllDepartments(
+          filialId, filialCacheId, limit, skip);
     });
+    return allDepartments.fold(
+        (failure) => Left(failure),
+        (departments) => Right(departments.sublist(
+            skip, skip + limit >= departments.length ? null : skip + limit)));
   }
 
   @override
   Future<Either<Failure, List<DepartmentEntity>>> searchDepartment(int filialId,
       int filialCacheId, String query, int limit, int skip) async {
-    return _getDepartments(() {
-      return remoteDataSource.searchDepartment(filialId, filialCacheId, query, limit, skip);
+    final allDepartments = await _getDepartments(filialId, filialCacheId, () {
+      return remoteDataSource.getAllDepartments(
+          filialId, filialCacheId, limit, skip);
     });
+    return allDepartments.fold(
+        (failure) => Left(failure),
+        (departments) => Right(departments
+            .where((element) =>
+                element.name.toLowerCase().contains(query.toLowerCase()))
+            .toList()
+            .sublist(skip,
+                skip + limit >= departments.length ? null : skip + limit)));
+  }
+
+  Future<Either<Failure, String>> _getLastEdit(
+      int filialId, int filialCacheId) async {
+    try {
+      final lastEdit = await localDataSource.getLastEdit(
+          filialId, filialCacheId);
+      return Right(lastEdit);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
   }
 
   Future<Either<Failure, List<DepartmentModel>>> _getDepartments(
+      int filialId,
+      int filialCacheId,
       Future<List<DepartmentModel>> Function() getDepartments) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteDepartments = await getDepartments();
-        localDataSource.departmentToCache(remoteDepartments);
-        return Right(remoteDepartments);
-      } on ServerException {
-        return Left(ServerFailure());
+    final lastEdit = await _getLastEdit(filialId, filialCacheId);
+    return lastEdit.fold((failure) => Left(failure), (date) async {
+      if (date != DateTime.now().toString().substring(0, 10)) {
+        try {
+          final remoteDoctors = await getDepartments();
+          localDataSource.lastEditToCache(filialId, filialCacheId,
+              DateTime.now().toString().substring(0, 10));
+          localDataSource.departmentToCache(
+              filialId, filialCacheId, remoteDoctors);
+          return Right(remoteDoctors);
+        } on ServerException {
+          return Left(ServerFailure());
+        }
+      } else {
+        try {
+          final localFilials = await localDataSource.getLastDepartmentsFromCache(
+              filialId, filialCacheId);
+          return Right(localFilials);
+        } on CacheException {
+          return Left(CacheFailure());
+        }
       }
-    } else {
-      try {
-        return const Right(<DepartmentModel>[]);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
-    }
+    });
+
   }
 }
