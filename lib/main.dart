@@ -53,11 +53,10 @@ class MyApp extends StatelessWidget {
           ],
           //ignore: always_specify_types
           supportedLocales: const [
-            Locale('en'),
-            Locale('ru'),
+            Locale('en', 'US'),
+            Locale('ru', 'RU'),
             // ... other locales the app supports
           ],
-          locale: const Locale('ru'),
           theme: ThemeData.dark().copyWith(
             backgroundColor: AppColors.mainBackground,
             scaffoldBackgroundColor: AppColors.mainBackground,
