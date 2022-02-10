@@ -42,9 +42,7 @@ class FilialRepository implements IFilialRepository {
             .where((element) =>
                 element.name.toLowerCase().contains(query.toLowerCase()) ||
                 element.address.toLowerCase().contains(query.toLowerCase()))
-            .toList()
-            .sublist(
-                skip, skip + limit >= filials.length ? null : skip + limit)));
+            .toList()));
   }
 
   Future<Either<Failure, String>> _getLastEdit() async {

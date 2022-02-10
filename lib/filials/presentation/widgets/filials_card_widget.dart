@@ -6,17 +6,28 @@ import 'package:flutter/material.dart';
 class FilialCard extends StatelessWidget {
   final FilialEntity filial;
 
-  const FilialCard({Key? key, required this.filial}) : super(key: key);
+  const FilialCard({
+    Key? key,
+    required this.filial,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DepartmentsPage(filialCacheId: filial.cashId, filialId: filial.id,)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => DepartmentsPage(
+              filialCacheId: filial.cashId,
+              filialId: filial.id,
+            ),
+          ),
+        );
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.cellBackground,
+          color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
@@ -35,7 +46,7 @@ class FilialCard extends StatelessWidget {
               Text(
                 filial.address,
                 style: const TextStyle(
-                  color: AppColors.greyColor,
+                  color: AppColors.filialAddress,
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,

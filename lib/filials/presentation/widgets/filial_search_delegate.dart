@@ -1,3 +1,7 @@
+import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
+import 'package:doc_hunter_app/common/widgets/error_search_text.dart';
+import 'package:doc_hunter_app/common/widgets/suggestion.dart';
 import 'package:doc_hunter_app/filials/domain/entities/filial_entity.dart';
 import 'package:doc_hunter_app/filials/domain/usecases/params/page_filial_params.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/search_bloc/search_bloc.dart';
@@ -45,7 +49,7 @@ class FilialSearchDelegate extends SearchDelegate {
         builder: (context, state) {
       if (state is FilialSearchLoadingState) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: DocProgressIndicator(),
         );
       } else if (state is FilialSearchLoadedState) {
         final filials = state.filials;
@@ -60,8 +64,8 @@ class FilialSearchDelegate extends SearchDelegate {
             return FilialCard(filial: result);
           },
           separatorBuilder: (context, index) {
-            return Divider(
-              color: Colors.grey[400],
+            return const Divider(
+              color: AppColors.cardDivider,
             );
           },
         );
@@ -83,12 +87,11 @@ class FilialSearchDelegate extends SearchDelegate {
     return ListView.separated(
       padding: const EdgeInsets.all(10),
       itemBuilder: (context, index) {
-        return Text(
-          _suggestions[index],
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w400,
-          ),
+        return Suggestion(
+          onTap: () {
+            query = _suggestions[index];
+          },
+          suggestion: _suggestions[index],
         );
       },
       separatorBuilder: (context, index) {
@@ -99,18 +102,8 @@ class FilialSearchDelegate extends SearchDelegate {
   }
 
   Widget _showErrorText(String errorMessage) {
-    return Container(
-      color: Colors.black,
-      child: Center(
-        child: Text(
-          errorMessage,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    return ErrorSearchText(
+      errorMessage: errorMessage,
     );
   }
 }

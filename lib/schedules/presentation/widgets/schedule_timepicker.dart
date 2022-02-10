@@ -1,3 +1,4 @@
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
 import 'package:doc_hunter_app/schedules/domain/entities/time_entity.dart';
 import 'package:doc_hunter_app/schedules/domain/usecases/params/schedule_time_params.dart';
 import 'package:doc_hunter_app/schedules/presentation/bloc/date_bloc/date_bloc.dart';
@@ -67,7 +68,7 @@ class ScheduleTimePicker extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(8.0),
       child: Center(
-        child: CircularProgressIndicator(),
+        child: DocProgressIndicator(),
       ),
     );
   }

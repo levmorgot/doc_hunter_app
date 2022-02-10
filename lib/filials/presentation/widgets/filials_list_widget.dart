@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
 import 'package:doc_hunter_app/filials/domain/entities/filial_entity.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_cubit.dart';
 import 'package:doc_hunter_app/filials/presentation/bloc/filials_list_cubit/filials_list_state.dart';
@@ -57,8 +59,8 @@ class FilialsList extends StatelessWidget {
           }
         },
         separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.grey[400],
+          return const Divider(
+            color: AppColors.cardDivider,
           );
         },
         itemCount: filials.length + (isLoading && !thatAll ? 1 : 0),
@@ -70,7 +72,7 @@ class FilialsList extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(8.0),
       child: Center(
-        child: CircularProgressIndicator(),
+        child: DocProgressIndicator(),
       ),
     );
   }

@@ -1,3 +1,7 @@
+import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
+import 'package:doc_hunter_app/common/widgets/error_search_text.dart';
+import 'package:doc_hunter_app/common/widgets/suggestion.dart';
 import 'package:doc_hunter_app/doctors/domain/entities/doctor_entity.dart';
 import 'package:doc_hunter_app/doctors/domain/usecases/params/page_doctor_params.dart';
 import 'package:doc_hunter_app/doctors/presentation/bloc/search_bloc/search_bloc.dart';
@@ -12,10 +16,10 @@ class DoctorSearchDelegate extends SearchDelegate {
   final int filialCacheId;
   final int departmentId;
   final _suggestions = [
-    'Мира',
-    'Детская ',
-    'Стоматология',
-    'Михайловская',
+    'Власенко',
+    'Петрова ',
+    'Елена',
+    'Сергеевна',
   ];
 
   DoctorSearchDelegate(
@@ -59,7 +63,7 @@ class DoctorSearchDelegate extends SearchDelegate {
         builder: (context, state) {
       if (state is DoctorSearchLoadingState) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: DocProgressIndicator(),
         );
       } else if (state is DoctorSearchLoadedState) {
         final doctors = state.doctors;
@@ -79,8 +83,8 @@ class DoctorSearchDelegate extends SearchDelegate {
             );
           },
           separatorBuilder: (context, index) {
-            return Divider(
-              color: Colors.grey[400],
+            return const Divider(
+              color: AppColors.cardDivider,
             );
           },
         );
@@ -102,12 +106,11 @@ class DoctorSearchDelegate extends SearchDelegate {
     return ListView.separated(
       padding: const EdgeInsets.all(10),
       itemBuilder: (context, index) {
-        return Text(
-          _suggestions[index],
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w400,
-          ),
+        return Suggestion(
+          onTap: () {
+            query = _suggestions[index];
+          },
+          suggestion: _suggestions[index],
         );
       },
       separatorBuilder: (context, index) {
@@ -118,18 +121,8 @@ class DoctorSearchDelegate extends SearchDelegate {
   }
 
   Widget _showErrorText(String errorMessage) {
-    return Container(
-      color: Colors.black,
-      child: Center(
-        child: Text(
-          errorMessage,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    return ErrorSearchText(
+      errorMessage: errorMessage,
     );
   }
 }

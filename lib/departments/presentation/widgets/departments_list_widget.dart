@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
+
 import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_cubit.dart';
 import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_state.dart';
@@ -68,8 +71,8 @@ class DepartmentsList extends StatelessWidget {
           }
         },
         separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.grey[400],
+          return const Divider(
+            color: AppColors.cardDivider,
           );
         },
         itemCount: departments.length + (isLoading && !thatAll ? 1 : 0),
@@ -81,7 +84,7 @@ class DepartmentsList extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(8.0),
       child: Center(
-        child: CircularProgressIndicator(),
+        child: DocProgressIndicator(),
       ),
     );
   }

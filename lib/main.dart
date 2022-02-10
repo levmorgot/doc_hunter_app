@@ -40,10 +40,8 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<DoctorsListCubit>()),
           BlocProvider<DoctorSearchBloc>(
               create: (context) => sl<DoctorSearchBloc>()),
-          BlocProvider<DateBloc>(
-              create: (context) => sl<DateBloc>()),
-          BlocProvider<TimeBloc>(
-              create: (context) => sl<TimeBloc>()),
+          BlocProvider<DateBloc>(create: (context) => sl<DateBloc>()),
+          BlocProvider<TimeBloc>(create: (context) => sl<TimeBloc>()),
         ],
         child: MaterialApp(
           localizationsDelegates: const [
@@ -57,7 +55,11 @@ class MyApp extends StatelessWidget {
             Locale('ru', 'RU'),
             // ... other locales the app supports
           ],
+          // locale: const Locale('ru'),
           theme: ThemeData.dark().copyWith(
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppColors.mainBackground,
+            ),
             backgroundColor: AppColors.mainBackground,
             scaffoldBackgroundColor: AppColors.mainBackground,
           ),

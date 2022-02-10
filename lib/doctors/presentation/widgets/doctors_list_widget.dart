@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:doc_hunter_app/common/app_colors.dart';
+import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
 import 'package:doc_hunter_app/doctors/domain/entities/doctor_entity.dart';
 import 'package:doc_hunter_app/doctors/presentation/bloc/doctors_list_cubit/doctors_list_cubit.dart';
 import 'package:doc_hunter_app/doctors/presentation/bloc/doctors_list_cubit/doctors_list_state.dart';
@@ -79,8 +81,8 @@ class DoctorsList extends StatelessWidget {
           }
         },
         separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.grey[400],
+          return const Divider(
+            color: AppColors.cardDivider,
           );
         },
         itemCount: doctors.length + (isLoading && !thatAll ? 1 : 0),
@@ -92,7 +94,7 @@ class DoctorsList extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.all(8.0),
       child: Center(
-        child: CircularProgressIndicator(),
+        child: DocProgressIndicator(),
       ),
     );
   }

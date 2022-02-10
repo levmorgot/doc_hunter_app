@@ -33,7 +33,7 @@ class DoctorCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.cellBackground,
+          color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
