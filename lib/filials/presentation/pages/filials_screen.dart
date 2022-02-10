@@ -1,3 +1,4 @@
+import 'package:doc_hunter_app/common/widgets/search_icon.dart';
 import 'package:doc_hunter_app/filials/presentation/widgets/filial_search_delegate.dart';
 import 'package:doc_hunter_app/filials/presentation/widgets/filials_list_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,14 @@ class HomePage extends StatelessWidget {
         title: const Text('Список больниц'),
         centerTitle: true,
         actions: [
-          IconButton(
+          SearchIcon(
             onPressed: () {
-              showSearch(context: context, delegate: FilialSearchDelegate());
+              showSearch(
+                context: context,
+                delegate: FilialSearchDelegate(),
+              );
             },
-            icon: const Icon(Icons.search),
-            color: Colors.white,
-          )
+          ),
         ],
       ),
       body: FilialsList(),
