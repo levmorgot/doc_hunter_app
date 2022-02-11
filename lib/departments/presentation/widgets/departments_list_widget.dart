@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:doc_hunter_app/common/app_colors.dart';
 import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
+import 'package:doc_hunter_app/common/widgets/empty_message.dart';
 
 import 'package:doc_hunter_app/departments/domain/entities/department_entity.dart';
 import 'package:doc_hunter_app/departments/presentation/bloc/departments_list_cubit/departments_list_cubit.dart';
@@ -51,7 +52,9 @@ class DepartmentsList extends StatelessWidget {
       } else if (state is DepartmentErrorState) {
         return Text(state.message);
       } else if (state is DepartmentEmptyState) {
-        return const Text("Нет отделений");
+        return const EmptyMessage(
+            message:
+                "Нам очень жаль, но эта больница не подключена к сервису электронной регистратуры");
       } else if (state is DepartmentLoadedState) {
         departments = state.departmentsList["$filialId-$filialCacheId"] ?? [];
         thatAll = state.thatAll;

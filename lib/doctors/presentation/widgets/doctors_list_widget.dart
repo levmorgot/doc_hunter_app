@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:doc_hunter_app/common/app_colors.dart';
 import 'package:doc_hunter_app/common/widgets/doc_progress_indicator.dart';
+import 'package:doc_hunter_app/common/widgets/empty_message.dart';
 import 'package:doc_hunter_app/doctors/domain/entities/doctor_entity.dart';
 import 'package:doc_hunter_app/doctors/presentation/bloc/doctors_list_cubit/doctors_list_cubit.dart';
 import 'package:doc_hunter_app/doctors/presentation/bloc/doctors_list_cubit/doctors_list_state.dart';
@@ -55,7 +56,9 @@ class DoctorsList extends StatelessWidget {
       } else if (state is DoctorErrorState) {
         return Text(state.message);
       } else if (state is DoctorEmptyState) {
-        return const Text("Нет отделений");
+        return const EmptyMessage(
+            message:
+                "Нам очень жаль, но эта больница не предоставила данные об отделении");
       } else if (state is DoctorLoadedState) {
         doctors =
             state.doctorsList["$filialId-$filialCacheId-$departmentId"] ?? [];
