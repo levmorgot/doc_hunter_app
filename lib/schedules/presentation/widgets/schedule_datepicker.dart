@@ -72,13 +72,13 @@ class ScheduleDatePicker extends StatelessWidget {
       return SizedBox(
         height: 300,
         child: SfDateRangePicker(
+          selectionColor: AppColors.selectionDate,
           onSelectionChanged: _onSelectionChanged,
           selectionMode: DateRangePickerSelectionMode.single,
           minDate: minDate,
           maxDate: maxDate,
           monthViewSettings: DateRangePickerMonthViewSettings(
             firstDayOfWeek: 1,
-            blackoutDates: norFreeDates,
             specialDates: freeDates,
             weekendDays: const [6, 7],
           ),

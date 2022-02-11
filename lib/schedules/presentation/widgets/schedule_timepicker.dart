@@ -52,7 +52,7 @@ class ScheduleTimePicker extends StatelessWidget {
               height: 300,
               child: times.isNotEmpty
                   ? _timesList(times)
-                  : const Text('Нет свободных записей'),
+                  : const Text('Запись не ведётся'),
             );
           });
         } else {

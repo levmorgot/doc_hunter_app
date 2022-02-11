@@ -16,9 +16,11 @@ class DepartmentsList extends StatelessWidget {
   final int filialId;
   final int filialCacheId;
 
-  DepartmentsList(
-      {Key? key, required this.filialId, required this.filialCacheId})
-      : super(key: key);
+  DepartmentsList({
+    Key? key,
+    required this.filialId,
+    required this.filialCacheId,
+  }) : super(key: key);
 
   void setupScrollController(BuildContext context) {
     scrollController.addListener(() {
@@ -64,7 +66,11 @@ class DepartmentsList extends StatelessWidget {
         controller: scrollController,
         itemBuilder: (context, index) {
           if (index < departments.length) {
-            return DepartmentCard(department: departments[index], filialCacheId: filialCacheId, filialId: filialId,);
+            return DepartmentCard(
+              department: departments[index],
+              filialCacheId: filialCacheId,
+              filialId: filialId,
+            );
           } else {
             Timer(const Duration(milliseconds: 30), () {
               scrollController
